@@ -25,11 +25,15 @@
 (defn xml-attribute [id value]
   (str " " (as-str (name id)) "=\"" (escape-html value) "\""))
 
+(xml-attribute "hello" 2)
+
 (defn render-attribute [[name value]]
   (cond
     (true? value) (xml-attribute name name)
     (not value) ""
     :else (xml-attribute name value)))
+
+(render-attribute [:name "hello"])
 
 (defn render-attr-map [attrs]
   (apply str (sort (map render-attribute attrs))))
@@ -90,3 +94,15 @@
 
 (defn html [template data]
   (render-hiccup (hiccup template data)))
+
+(def data
+  {:person
+   {:first-name "John"
+    :last-name "Doe"}})
+
+(def template
+  [:div
+   [:label "first name " :data/person.first-name]
+   [:label "last name " :data/person.last-name]])
+
+(html template data)
